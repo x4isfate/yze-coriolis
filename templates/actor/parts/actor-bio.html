@@ -32,11 +32,11 @@
             <div class="bio-block">
                 <span class="bio-block-title">{{localize "YZECORIOLIS.CrewPosition"}}</span>
                 <select class="skill-category crew-position">
-                    {{#select currentCrewOption}}
+                    {{#yzeSelect currentCrewOption}}
                     {{#each crewOptions as |option|}}
                     <option value="{{option.key}}">{{option.label}}</option>
                     {{/each}}
-                    {{/select}}
+                    {{/yzeSelect}}
                 </select>
             </div>
             <div class="bio-block">

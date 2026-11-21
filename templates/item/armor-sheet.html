@@ -8,11 +8,11 @@
                 <div class="resource flexrow">
                     <label class="resource-label">{{localize "YZECORIOLIS.TechTier"}}</label>
                     <select class="gear-category" name="system.techTier">
-                        {{#select system.techTier}}
+                        {{#yzeSelect system.techTier}}
                         {{#each config.techTiers as |label techTier|}}
                         <option value="{{techTier}}">{{label}}</option>
                         {{/each}}
-                        {{/select}}
+                        {{/yzeSelect}}
                     </select>
                 </div>
 
@@ -36,11 +36,11 @@
                 <div class="resource flexrow">
                     <label class="resource-label">{{localize "YZECORIOLIS.Weight"}}</label>
                     <select class="weight-category" name="system.weight">
-                        {{#select system.weight}}
+                        {{#yzeSelect system.weight}}
                         {{#each config.gearWeights as |label weight|}}
                         <option value="{{weight}}">{{label}}</option>
                         {{/each}}
-                        {{/select}}
+                        {{/yzeSelect}}
                     </select>
                 </div>
 

@@ -1,5 +1,18 @@
 # Changelog
 
+## 4.4.0 (2026-11-21)
+
+Port to Foundry VTT 14 (verified on 14.370). No new content or features; actor and item data are unchanged.
+
+### Bug Fixes
+
+* system failed to initialise on v14: CONFIG.TinyMCE and the journal sheet registration threw during init
+* sheets with drop-downs failed to render on v14: the core {{#select}} helper was removed, replaced by a local helper
+* rolls, pushes and the darkness point window used globals removed in v14 (mergeObject, Die, isNewerVersion, hasProperty, expandObject)
+* roll visibility now reads core.messageMode, which replaced core.rollMode in v14
+* push button is hidden again from players who did not make the roll
+* ship sheet instructions compendium converted from the old NeDB format to LevelDB
+
 ## [4.3.0](https://github.com/hodpub/yze-coriolis/compare/v4.2.0...v4.3.0) (2026-03-06)
 
 

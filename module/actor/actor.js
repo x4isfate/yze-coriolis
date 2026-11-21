@@ -1,3 +1,4 @@
+import { getLegacyRollMode } from "../util.js";
 import {
   migrateActorKeyArtIfNeeded,
   migrateTalentBonus,
@@ -27,8 +28,8 @@ export class yzecoriolisActor extends Actor {
     //setup default images for ships
     if (
       initData.type === "ship" &&
-      ((hasProperty(initData, "img") && initData.img === Actor.DEFAULT_ICON) ||
-        !hasProperty(initData, "img"))
+      ((foundry.utils.hasProperty(initData, "img") && initData.img === Actor.DEFAULT_ICON) ||
+        !foundry.utils.hasProperty(initData, "img"))
     ) {
       this.updateSource({ img: CONFIG.YZECORIOLIS.DEFAULT_SHIP_KEY_ART });
     }
@@ -36,7 +37,7 @@ export class yzecoriolisActor extends Actor {
     // we check the incoming data to make sure we aren't overriding a 'cloning'
     // operation.
     if (
-      !hasProperty(initData, "img") &&
+      !foundry.utils.hasProperty(initData, "img") &&
       (initData.type === "character" || initData.type === "npc")
     ) {
       this.updateSource({
@@ -1763,7 +1764,7 @@ export class yzecoriolisActor extends Actor {
       },
       title: title,
       template: template,
-      rollMode: game.settings.get("core", "rollMode"),
+      rollMode: getLegacyRollMode(),
       sound: CONFIG.sounds.dice,
       flags: {
         img: this.prototypeToken.randomImg

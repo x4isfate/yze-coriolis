@@ -6,7 +6,7 @@ function isCustomJournal(entity) {
   return true;
 }
 
-export class coriolisJournalSheet extends JournalSheet {
+export class coriolisJournalSheet extends foundry.appv1.sheets.JournalSheet {
   /**
    * Activate a named TinyMCE text editor
    * @param {string} name             The named data field which the editor modifies.

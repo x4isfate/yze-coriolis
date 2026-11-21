@@ -39,7 +39,7 @@ export class yzecoriolisItem extends Item {
     // for cloning operations just keep the image. this is a brittle hack. Would
     // like to find a way to override item icons on create, but ignore it on
     // cloning and imports from compendiums.
-    if (hasProperty(initData, "img") && initData.img !== Item.DEFAULT_ICON) {
+    if (foundry.utils.hasProperty(initData, "img") && initData.img !== Item.DEFAULT_ICON) {
       return;
     }
     let itemType = initData.type;
@@ -110,7 +110,7 @@ export class yzecoriolisItem extends Item {
     const sysData = foundry.utils.deepClone(this.system);
     const labels = this.labels;
     // Rich text description
-    sysData.description = await TextEditor.enrichHTML(
+    sysData.description = await foundry.applications.ux.TextEditor.implementation.enrichHTML(
       sysData.description,
       htmlOptions
     );
@@ -138,7 +138,7 @@ export class yzecoriolisItem extends Item {
         ? Object.values(this.system.itemModifiers)
         : "",
     };
-    const html = await renderTemplate(
+    const html = await foundry.applications.handlebars.renderTemplate(
       `systems/yzecoriolis/templates/sidebar/item.html`,
       templateData
     );

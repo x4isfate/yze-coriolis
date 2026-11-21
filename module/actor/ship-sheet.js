@@ -25,7 +25,7 @@ import { CoriolisModifierDialog } from "../coriolisRollModifier.js";
  * Extend the basic ActorSheet for a basic Coriolis ship sheet
  * @extends {ActorSheet}
  */
-export class yzecoriolisShipSheet extends ActorSheet {
+export class yzecoriolisShipSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
@@ -79,7 +79,7 @@ export class yzecoriolisShipSheet extends ActorSheet {
     if (shipImageSet) {
       imageCSSClass = "object-fit-cover";
     }
-    const shipNotes = await TextEditor.enrichHTML(baseData.actor.system.notes, {
+    const shipNotes = await foundry.applications.ux.TextEditor.implementation.enrichHTML(baseData.actor.system.notes, {
       async: true,
     });
     const sheetData = {

@@ -19,7 +19,7 @@ import {
   importShipSheetTutorial,
   showOnboardingMessage,
 } from "./onboarding.js";
-import { coriolisJournalSheet } from "./coriolisJournal.js";
+import "./coriolisJournal.js";
 import { DarknessPointDisplay } from "./darkness-points.js";
 
 Hooks.once("init", async function () {
@@ -32,17 +32,17 @@ Hooks.once("init", async function () {
     migrations: migrations,
   };
 
-  // Setup TinyMCE stylings
-  CONFIG.TinyMCE.content_css = "systems/yzecoriolis/css/yzecoriolismce.css";
+  // Setup TinyMCE stylings. TinyMCE was removed in Foundry v14, where editors
+  // use ProseMirror and CONFIG.TinyMCE no longer exists.
+  if (CONFIG.TinyMCE) {
+    CONFIG.TinyMCE.content_css = "systems/yzecoriolis/css/yzecoriolismce.css";
+  }
 
-  // foundry.appv1.sheets.JournalSheet;
-  // JournalEntry
-  DocumentSheetConfig.registerSheet(
-    foundry.appv1.sheets.JournalSheet,
-    "yzecoriolis",
-    coriolisJournalSheet,
-    { makeDefault: true }
-  );
+  const DocumentSheetConfig = foundry.applications.apps.DocumentSheetConfig;
+
+  // The v13 release registered coriolisJournalSheet with a sheet class in place
+  // of a document class, so Foundry silently ignored it and journals used the
+  // core sheet. Keep that behaviour: the custom journal sheet is not registered.
 
   preloadHandlerbarsTemplates();
 
@@ -55,25 +55,33 @@ Hooks.once("init", async function () {
   registerSystemSettings();
 
   // Register sheet application classes
-  Actors.unregisterSheet("core", ActorSheet);
-  Actors.registerSheet("yzecoriolis", yzecoriolisActorSheet, {
+  DocumentSheetConfig.unregisterSheet(
+    Actor,
+    "core",
+    foundry.appv1.sheets.ActorSheet
+  );
+  DocumentSheetConfig.registerSheet(Actor, "yzecoriolis", yzecoriolisActorSheet, {
     types: ["character"],
     makeDefault: true,
     label: "YZECORIOLIS.SheetClassCharacter",
   });
-  Actors.registerSheet("yzecoriolis", yzecoriolisActorSheet, {
+  DocumentSheetConfig.registerSheet(Actor, "yzecoriolis", yzecoriolisActorSheet, {
     types: ["npc"],
     makeDefault: true,
     label: "YZECORIOLIS.SheetClassNPC",
   });
-  Actors.registerSheet("yzecoriolis", yzecoriolisShipSheet, {
+  DocumentSheetConfig.registerSheet(Actor, "yzecoriolis", yzecoriolisShipSheet, {
     types: ["ship"],
     makeDefault: true,
     label: "YZECORIOLIS.SheetClassShip",
   });
 
-  Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("yzecoriolis", yzecoriolisItemSheet, {
+  DocumentSheetConfig.unregisterSheet(
+    Item,
+    "core",
+    foundry.appv1.sheets.ItemSheet
+  );
+  DocumentSheetConfig.registerSheet(Item, "yzecoriolis", yzecoriolisItemSheet, {
     makeDefault: true,
     label: "SheetClassItem",
   });
@@ -92,6 +100,19 @@ Hooks.once("init", async function () {
 
   // Initialize Darkness Point Display
   DarknessPointDisplay.initialize();
+
+  // Replacement for the core {{#select}} block helper, which was deprecated in
+  // v12 and removed in v14. Same behaviour: marks the option whose value
+  // matches `selected` as selected.
+  Handlebars.registerHelper("yzeSelect", function (selected, options) {
+    const escaped = Handlebars.escapeExpression(selected).replace(
+      /[.*+?^${}()|[\]\\]/g,
+      "\\$&"
+    );
+    const rgx = new RegExp(` value=["']${escaped}["']`);
+    const html = options.fn(this);
+    return html.replace(rgx, "$& selected");
+  });
 
   Handlebars.registerHelper("concat", function () {
     var outStr = "";
@@ -348,7 +369,7 @@ Hooks.on("renderChatMessageHTML", (msg, html, context) => {
     $(html).find(".message-content").remove();
   }
   // remove push option from non-authors
-  if (!game.user.isGM && msg.message.user !== game.user.id) {
+  if (!game.user.isGM && msg.author?.id !== game.user.id) {
     $(html).find(".dice-push").remove();
   }
 });
@@ -402,14 +423,14 @@ Hooks.once("ready", async function () {
   const COMPATIBLE_MIGRATION_VERSION = "1.4.7";
 
   let needMigration =
-    isNewerVersion(currentVersion, NEEDS_MIGRATION_AFTER_VERSION) &&
-    isNewerVersion(NEEDS_MIGRATION_AFTER_VERSION, lastMigratedToVersion);
+    foundry.utils.isNewerVersion(currentVersion, NEEDS_MIGRATION_AFTER_VERSION) &&
+    foundry.utils.isNewerVersion(NEEDS_MIGRATION_AFTER_VERSION, lastMigratedToVersion);
 
   // Perform the migration
   if (needMigration && game.user.isGM) {
     if (
       currentVersion &&
-      isNewerVersion(COMPATIBLE_MIGRATION_VERSION, currentVersion)
+      foundry.utils.isNewerVersion(COMPATIBLE_MIGRATION_VERSION, currentVersion)
     ) {
       ui.notifications.error(game.i18n.localize("ErrorsOldFoundryVersion"), {
         permanent: true,

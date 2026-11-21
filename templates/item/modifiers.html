@@ -12,7 +12,7 @@
         <li class="special-feature flexrow"  data-item-id="{{id}}">
             <div class="feature-name">
                 <select name="system.itemModifiers.{{id}}.mod">
-                    {{#select itemmod.mod}}
+                    {{#yzeSelect itemmod.mod}}
                     <option value="itemModifierNone" disabled  selected>{{localize "YZECORIOLIS.ItemModifierSelect"}}</option>
                     <optgroup label={{localize "YZECORIOLIS.Attributes"}}>
                       <option value="itemModifierAttrAll">{{localize "YZECORIOLIS.AttrAll"}}</option>
@@ -75,7 +75,7 @@
                       <option value="itemModifierEnc">{{localize "YZECORIOLIS.Encumbrance"}}</option>
                       <option value="itemModifierMR">{{localize "YZECORIOLIS.MovementRate"}}</option>
                     </optgroup>
-                    {{/select}}
+                    {{/yzeSelect}}
                 </select>
             </div>
             <div style="flex: 1 1 10%;" title="{{localize "YZECORIOLIS.ItemModifierValue"}}">
