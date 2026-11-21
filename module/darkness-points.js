@@ -86,14 +86,14 @@ async function showDarknessPoints(totalPoints) {
     totalPoints: totalPoints,
   };
 
-  messageData.content = await renderTemplate(
+  messageData.content = await foundry.applications.handlebars.renderTemplate(
     "systems/yzecoriolis/templates/sidebar/darkness-points-chat.html",
     dpData
   );
   await ChatMessage.create(messageData);
 }
 
-export class DarknessPointDisplay extends Application {
+export class DarknessPointDisplay extends foundry.appv1.api.Application {
   static initialize() {
     this.dpDisplay = new DarknessPointDisplay();
   }
@@ -107,7 +107,7 @@ export class DarknessPointDisplay extends Application {
   }
 
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
+    return foundry.utils.mergeObject(super.defaultOptions, {
       id: "coriolis-darness-points-display",
       template:
         "systems/yzecoriolis/templates/darkness-points/darkness-points-display.html",

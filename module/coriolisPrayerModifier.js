@@ -1,6 +1,6 @@
 import { coriolisPushRoll } from "./coriolis-roll.js";
 
-export class CoriolisModifierDialog extends FormApplication {
+export class CoriolisModifierDialog extends foundry.appv1.api.FormApplication {
     constructor(chatMessage, origRollData, origRoll) {
       super();
       this.chatMessage = chatMessage;
@@ -17,7 +17,7 @@ export class CoriolisModifierDialog extends FormApplication {
     }
   
     static get defaultOptions() {
-      return mergeObject(super.defaultOptions, {
+      return foundry.utils.mergeObject(super.defaultOptions, {
         classes: ['form'],
         popOut: true,
         template: "systems/yzecoriolis/templates/dialog/coriolis-roll.html",

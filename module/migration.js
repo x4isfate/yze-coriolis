@@ -191,7 +191,7 @@ export const migrateCompendium = async function (pack) {
       else if (entity === "Actor") updateData = migrateActorData(ent.data);
       else if (entity === "Scene") updateData = migrateSceneData(ent.data);
       if (!foundry.utils.isEmpty(updateData)) {
-        expandObject(updateData);
+        foundry.utils.expandObject(updateData);
         updateData["_id"] = ent._id;
         await pack.updateEntity(updateData);
         console.log(
@@ -223,8 +223,8 @@ export const migrateActorData = function (actor) {
   // introduce movement rate
   const correctType = actor.type === "npc" || actor.type === "character";
   if (
-    (correctType && !hasProperty(actor, "system.movementRate")) ||
-    (hasProperty(actor, "system.movementRate") &&
+    (correctType && !foundry.utils.hasProperty(actor, "system.movementRate")) ||
+    (foundry.utils.hasProperty(actor, "system.movementRate") &&
       actor.system.movementRate === null)
   ) {
     updateData = { "system.movementRate": 10 };
@@ -248,7 +248,7 @@ export const migrateActorData = function (actor) {
     // Update the Owned Item
     if (!foundry.utils.isEmpty(itemUpdate)) {
       itemUpdate._id = itemData._id;
-      arr.push(expandObject(itemUpdate));
+      arr.push(foundry.utils.expandObject(itemUpdate));
     }
 
     return arr;

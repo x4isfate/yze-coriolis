@@ -12,7 +12,7 @@ import { buildCrewOptionsArray } from "./crew.js";
  * Extend the basic ActorSheet for a basic Coriolis character
  * @extends {ActorSheet}
  */
-export class yzecoriolisActorSheet extends ActorSheet {
+export class yzecoriolisActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
@@ -58,7 +58,7 @@ export class yzecoriolisActorSheet extends ActorSheet {
       itemData = this._prepareCharacterItems(baseData.actor);
       actorStats = this._prepCharacterStats(baseData.actor.system);
     }
-    const bioNotes = await TextEditor.enrichHTML(baseData.actor.system.notes, {
+    const bioNotes = await foundry.applications.ux.TextEditor.implementation.enrichHTML(baseData.actor.system.notes, {
       async: true,
     });
     const sheetData = {
@@ -277,7 +277,7 @@ export class yzecoriolisActorSheet extends ActorSheet {
 
     // Delete Inventory Item
     html.find(".item-delete").click((ev) => {
-      const confirmationDialog = new Dialog({
+      const confirmationDialog = new foundry.appv1.api.Dialog({
         title: game.i18n.localize("YZECORIOLIS.ItemDeleteConfirmationTitle"),
         content: `<p>${game.i18n.localize(
           "YZECORIOLIS.ItemDeleteConfirmationContent"

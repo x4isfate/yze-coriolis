@@ -26,7 +26,7 @@ export async function coriolisRoll(chatOptions, rollData) {
     ? createAutomaticFireFormula(totalDice, rollData.numberOfIgnoredOnes)
     : `${totalDice}d6`;
   let roll = new Roll(formula);
-  await roll.evaluate({ async: false });
+  await roll.evaluate();
   /* await showDiceSoNice(roll, chatOptions.rollMode); */
   const result = evaluateCoriolisRoll(rollData, roll);
   await showChatMessage(chatOptions, result, roll);
@@ -43,7 +43,7 @@ export async function coriolisPushRoll(chatMessage, origRollData, origRoll) {
     for (let part of origRoll.dice) {
       for (let r of part.results) {
         if (r.result !== CONFIG.YZECORIOLIS.maxRoll) {
-          let newDie = new Die(6);
+          let newDie = new foundry.dice.terms.Die({ number: 1, faces: 6 });
           await newDie.roll(1);
           r.result = newDie.results[0].result;
         }
@@ -54,7 +54,7 @@ export async function coriolisPushRoll(chatMessage, origRollData, origRoll) {
       if (!part.modifiers.includes("x>1")) {
         part.number = part.number + bonus;
         for (let i = 0; i < bonus; i++) {
-          let newDie = new Die(6);
+          let newDie = new foundry.dice.terms.Die({ number: 1, faces: 6 });
           await newDie.roll(1);
           part.results.push(newDie.results[0]);
         }
@@ -162,7 +162,7 @@ function getTotalDice(rollData) {
 }
 
 async function showChatMessage(chatMsgOptions, resultData, roll) {
-  let tooltip = await renderTemplate(
+  let tooltip = await foundry.applications.handlebars.renderTemplate(
     "systems/yzecoriolis/templates/sidebar/dice-results.html",
     getTooltipData(resultData, roll)
   );
@@ -204,7 +204,7 @@ async function showChatMessage(chatMsgOptions, resultData, roll) {
     chatMsgOptions["whisper"] = [game.user];
 
   chatMsgOptions.roll = roll;
-  const html = await renderTemplate(chatMsgOptions.template, chatData);
+  const html = await foundry.applications.handlebars.renderTemplate(chatMsgOptions.template, chatData);
   chatMsgOptions["content"] = html;
   chatMsgOptions["rolls"] = [roll];
   const msg = await ChatMessage.create(chatMsgOptions);
@@ -218,7 +218,7 @@ async function updateChatMessage(
   resultData,
   origRoll
 ) {
-  let tooltip = await renderTemplate(
+  let tooltip = await foundry.applications.handlebars.renderTemplate(
     "systems/yzecoriolis/templates/sidebar/dice-results.html",
     getTooltipData(resultData, origRoll)
   );
@@ -254,7 +254,7 @@ async function updateChatMessage(
     prayerModifiersChecked: getPrayerModifiersChecked(resultData.rollData),
   };
 
-  return renderTemplate(
+  return foundry.applications.handlebars.renderTemplate(
     "systems/yzecoriolis/templates/sidebar/roll.html",
     chatData
   ).then((html) => {

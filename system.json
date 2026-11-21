@@ -2,11 +2,11 @@
     "id": "yzecoriolis",
     "title": "Coriolis",
     "description": "Coriolis System for Foundry VTT.",
-    "version": "4.3.0",
+    "version": "4.4.0",
     "compatibility": {
         "minimum": "13",
-        "verified": "13",
-        "maximum": "13"
+        "verified": "14.370",
+        "maximum": "14"
     },
     "templateVersion": 2,
     "authors": [
@@ -26,21 +26,14 @@
         "css/yzecoriolis.css",
         "css/yzecoriolismce.css"
     ],
-    "relationships": {
-        "systems": [
-            {
-                "id": "yzecoriolis"
-            }
-        ]
-    },
     "scripts": [],
     "packs": [
         {
             "name": "ship_sheet_instructions",
             "label": "Ship Sheet Instructions",
-            "path": "packs/ship-sheet-instructions.db",
+            "path": "packs/ship-sheet-instructions",
             "type": "JournalEntry",
-            "module": "Coriolis"
+            "system": "yzecoriolis"
         }
     ],
     "languages": [
@@ -81,8 +74,8 @@
     },
     "primaryTokenAttribute": "health",
     "secondaryTokenAttribute": "power",
-    "url": "",
+    "url": "https://github.com/x4isfate/yze-coriolis",
     "protected": false,
-    "manifest": "https://github.com/hodpub/yze-coriolis/releases/latest/download/system.json",
-    "download": "https://github.com/hodpub/yze-coriolis/releases/download/v4.3.0/coriolis.zip"
+    "manifest": "https://github.com/x4isfate/yze-coriolis/releases/latest/download/system.json",
+    "download": "https://github.com/x4isfate/yze-coriolis/releases/download/v4.4.0/coriolis.zip"
 }

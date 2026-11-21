@@ -7,11 +7,11 @@
                   <div class="resource flexrow">
                     <label class="resource-label">{{localize "YZECORIOLIS.Category"}}</label>
                     <select class="gear-category" name="system.category">
-                        {{#select system.category}}
+                        {{#yzeSelect system.category}}
                         {{#each config.shipModuleCategories as |label category|}}
                         <option value="{{category}}">{{label}}</option>
                         {{/each}}
-                        {{/select}}
+                        {{/yzeSelect}}
                     </select>
                 </div>
                 <div class="resource numeric-input flexrow">
@@ -40,11 +40,11 @@
                 <div class="resource flexrow">
                     <label class="resource-label">{{localize "YZECORIOLIS.EffectiveRange"}}</label>
                     <select class="weight-category" name="system.range">
-                        {{#select system.range}}
+                        {{#yzeSelect system.range}}
                         {{#each config.shipWeaponRanges as |label range|}}
                         <option value="{{range}}">{{label}}</option>
                         {{/each}}
-                        {{/select}}
+                        {{/yzeSelect}}
                     </select>
                 </div>
                 {{/if_eq}}
@@ -52,11 +52,11 @@
                 <div class="resource flexrow">
                     <label class="resource-label">{{localize "YZECORIOLIS.TechTier"}}</label>
                     <select class="gear-category" name="system.techTier">
-                        {{#select system.techTier}}
+                        {{#yzeSelect system.techTier}}
                         {{#each config.techTiers as |label techTier|}}
                         <option value="{{techTier}}">{{label}}</option>
                         {{/each}}
-                        {{/select}}
+                        {{/yzeSelect}}
                     </select>
                 </div>
 

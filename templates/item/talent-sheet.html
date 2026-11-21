@@ -7,22 +7,22 @@
                 <div class="resource flexrow talent-category">
                     <label class="resource-label">{{localize "YZECORIOLIS.Category"}}</label>
                     <select class="skill-category" name="system.category">
-                        {{#select system.category}}
+                        {{#yzeSelect system.category}}
                         {{#each config.talentCategories as |label category|}}
                         <option value="{{category}}">{{label}}</option>
                         {{/each}}
-                        {{/select}}
+                        {{/yzeSelect}}
                     </select>
                 </div>
                 {{#if_eq system.category 'group'}}
                 <div class="resource flexrow">
                     <label class="resource-label">{{localize "YZECORIOLIS.GroupConcept"}}</label>
                     <select class="skill-attribute" name="system.groupConcept">
-                        {{#select system.groupConcept}}
+                        {{#yzeSelect system.groupConcept}}
                         {{#each config.talentGroupConceptCategories as |label groupTalent|}}
                         <option value="{{groupTalent}}">{{label}}</option>
                         {{/each}}
-                        {{/select}}
+                        {{/yzeSelect}}
                     </select>
                 </div>
                 {{/if_eq}}

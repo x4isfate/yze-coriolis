@@ -21,13 +21,13 @@
             {{localize "YZECORIOLIS.TechTier"}}
           </label>
           <select class="gear-category" name="system.techTier">
-            {{#select system.techTier}}
+            {{#yzeSelect system.techTier}}
               {{#each config.techTiers as |label techTier|}}
                 <option value="{{techTier}}">
                   {{label}}
                 </option>
               {{/each}}
-            {{/select}}
+            {{/yzeSelect}}
           </select>
         </div>
         <div class="resource flexrow">

@@ -7,7 +7,7 @@ Hooks.on("updateUser", (entity, delta, options, userId) => {
   // we avoid any null sets because we are just doing a clearing of the flag
   // before setting it to a valid value.
   const isSettingDP =
-    hasProperty(delta, "flags.yzecoriolis.darknessPoints") &&
+    foundry.utils.hasProperty(delta, "flags.yzecoriolis.darknessPoints") &&
     delta.flags.yzecoriolis.darknessPoints !== null;
 
   if (options.diff && isSettingDP) {
@@ -58,7 +58,7 @@ Hooks.on("renderCombatTracker", (app, html, combatInfo) => {
       const combatant = currentCombat.combatants.find((c) => c.id === id);
       const initDiv = el.getElementsByClassName("token-initiative")[0];
 
-      if (combatant.initiative != null) {
+      if (combatant && initDiv && combatant.initiative != null) {
         const readOnly = game.user.isGM ? "" : "readonly";
         initDiv.innerHTML = `<input style="color: white; "type="number" ${readOnly} value="${combatant.initiative}">`;
 
