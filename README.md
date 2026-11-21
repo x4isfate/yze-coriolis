@@ -4,11 +4,15 @@
 
 The **Official** system for playing [Coriolis](https://frialigan.se/en/games/coriolis-2/) on Foundry VTT.
 
+## Foundry VTT 14 port
+
+This fork ports version 4.3.0 of the system to Foundry VTT 14 (verified on build 14.370). It adds no new content or features: existing actors, items and worlds keep their data and open as before. It still runs on Foundry 13.
+
 ## Installation
 
 1. Inside Foundry's Configuration and Setup screen, go to **Game Systems**
 2. Click "Install System"
-3. In the Manifest URL field paste: `https://raw.githubusercontent.com/winks-vtt/yze-coriolis/master/system.json`
+3. In the Manifest URL field paste: `https://github.com/x4isfate/yze-coriolis/releases/latest/download/system.json`
 
 ## Official Modules
 
