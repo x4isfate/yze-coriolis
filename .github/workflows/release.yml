@@ -1,11 +1,14 @@
 name: Release
 
 # Builds coriolis.zip and system.json and attaches them to a GitHub release.
-# Run it by pushing a tag that matches the version in system.json, e.g. v4.4.0.
+# Runs when a v* tag is pushed, or when system.json changes on a branch and its
+# version has no release yet (the tag is then created from that commit).
 
 on:
   push:
     tags: ["v*"]
+    branches: ["**"]
+    paths: ["system.json", ".github/workflows/release.yml"]
   workflow_dispatch:
     inputs:
       tag:
@@ -19,19 +22,30 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Resolve tag
-        id: tag
-        run: echo "name=${{ github.event.inputs.tag || github.ref_name }}" >> "$GITHUB_OUTPUT"
-
       - uses: actions/checkout@v4
         with:
-          ref: ${{ steps.tag.outputs.name }}
+          ref: ${{ github.event.inputs.tag || github.sha }}
+
+      - name: Resolve tag
+        id: tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then TAG="${{ github.ref_name }}";
+          elif [ -n "${{ github.event.inputs.tag }}" ]; then TAG="${{ github.event.inputs.tag }}";
+          else TAG="v$(jq -r .version system.json)"; fi
+          echo "name=$TAG" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.ref_type }}" = "branch" ] && gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists, nothing to do."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
 
       - name: Check that the tag matches system.json
+        if: steps.tag.outputs.skip != 'true'
         env:
           TAG_NAME: ${{ steps.tag.outputs.name }}
         run: |
@@ -40,20 +54,23 @@ jobs:
           jq -e --arg u "https://github.com/${{ github.repository }}/releases/download/$TAG_NAME/coriolis.zip" '.download == $u' system.json
 
       - name: Build compendium packs
+        if: steps.tag.outputs.skip != 'true'
         run: |
           mkdir -p /tmp/fvtt-cli && npm install --prefix /tmp/fvtt-cli @foundryvtt/foundryvtt-cli@3.0.5
           FVTT_CLI=/tmp/fvtt-cli/node_modules/@foundryvtt/foundryvtt-cli/index.mjs node tools/build-packs.mjs
 
       - name: Zip the system
+        if: steps.tag.outputs.skip != 'true'
         run: |
           zip -r coriolis.zip LICENSE README.md CHANGELOG.md system.json template.json \
             css/ data/ images/ lang/ module/ packs/ templates/ \
             -x "packs/_source/*" "packs/*/LOCK" "packs/*/LOG*"
 
       - name: Publish release
+        if: steps.tag.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           TAG_NAME: ${{ steps.tag.outputs.name }}
         run: |
-          gh release view "$TAG_NAME" >/dev/null 2>&1 || gh release create "$TAG_NAME" --title "$TAG_NAME" --notes "Coriolis for Foundry VTT 14. See CHANGELOG.md."
+          gh release view "$TAG_NAME" >/dev/null 2>&1 || gh release create "$TAG_NAME" --target "${{ github.sha }}" --title "$TAG_NAME" --notes "Coriolis for Foundry VTT 14. See CHANGELOG.md."
           gh release upload "$TAG_NAME" coriolis.zip system.json --clobber
